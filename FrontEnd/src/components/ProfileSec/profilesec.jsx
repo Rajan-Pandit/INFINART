@@ -38,7 +38,8 @@ useEffect(() => {
             <li><span>Reviews</span></li>   
             <li><span>Coupons</span></li>
             <li><span>Settings</span></li>
-             <Link to="/Seller"><li><span>Become a Seller</span></li></Link>
+             {/* <Link to="/Seller"><li><span>Become a Seller</span></li></Link> */}
+             <Link to="http://localhost:5173/register"><li><span>Become a Seller</span></li></Link> 
             
           </ul>
         </nav>

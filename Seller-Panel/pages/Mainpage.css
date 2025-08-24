@@ -1,0 +1,59 @@
+/* Ensure no horizontal scrollbar ever */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.mainpage-container {
+  display: flex;
+  height: calc(100vh - 64px); /* Fill remaining height below Navbar */
+  width: 100%;
+  overflow-x: hidden; /* Absolutely prevent width overflow */
+  box-sizing: border-box;
+}
+
+/* Sidebar - fixed on left */
+.mainpage-container > :first-child {
+  width: 250px;                  /* Fixed width */
+  position: fixed;
+  top: 64px;                     /* Below the navbar */
+  left: 0;
+  height: calc(100vh - 64px);    /* Full view height minus navbar */
+  overflow-y: auto;
+  background-color: #f5f5f5;
+  border-right: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+/* Dashboard - right section content */
+/* Dashboard - right section content */
+.mainpage-container > :last-child {
+  flex: 1;
+  margin-left: 250px;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+  overflow-x: hidden;   /* 🚀 Prevent horizontal scrollbar in this section */
+  padding: 1rem;
+  background-color: #fafbfc;
+  box-sizing: border-box;
+  min-width: 0;         /* Allow flex child to shrink */
+}
+
+/* Optional: Scrollbar styling */
+.mainpage-container > :first-child::-webkit-scrollbar,
+.mainpage-container > :last-child::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mainpage-container > :first-child::-webkit-scrollbar-thumb,
+.mainpage-container > :last-child::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.mainpage-container > :first-child::-webkit-scrollbar-track,
+.mainpage-container > :last-child::-webkit-scrollbar-track {
+  background: transparent;
+}

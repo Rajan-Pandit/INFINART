@@ -1,0 +1,97 @@
+.sellerProfile {
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  max-width: 800px;
+  margin: 20px auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: 'Inter', sans-serif;
+}
+
+.sellerProfileError {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.profileAvatar {
+  width: 60px;
+  height: 60px;
+  background: #4f46e5;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.storeName {
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.approved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.rejected, .suspended {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.profileSection {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.profileSection h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.profileStats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.profileStats div {
+  text-align: center;
+}
+
+.profileStats h4 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.profileStats p {
+  font-size: 14px;
+  color: #6b7280;
+}

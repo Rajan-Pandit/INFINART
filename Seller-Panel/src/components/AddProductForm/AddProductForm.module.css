@@ -1,0 +1,113 @@
+/* ===== Container ===== */
+.add-product {
+  width: 100%;
+  max-width: 1460px;
+  /* margin: 30px auto; */
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== Headings ===== */
+.add-product h2 {
+  text-align: center;
+  font-size: 32px;
+  color: #20BFA5;
+  margin-bottom: 20px;
+}
+
+/* ===== Labels ===== */
+.add-product label,
+.form-col label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+/* ===== Inputs, Selects, Textareas ===== */
+.add-product input,
+.add-product select,
+.add-product textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 15px;
+  font-family: inherit;
+  line-height: 1.4;
+  box-sizing: border-box;
+  background: #fff;
+  transition: border-color 0.2s ease;
+}
+
+.add-product input:focus,
+.add-product select:focus,
+.add-product textarea:focus {
+  border-color: #20BFA5;
+  outline: none;
+}
+
+/* Specific element tweaks */
+.add-product select {
+  height: 40px;
+}
+
+.add-product textarea {
+  resize: vertical;
+}
+
+.big-textarea {
+  min-height: 150px;
+}
+
+/* ===== Form Layout ===== */
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.form-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 250px;
+}
+
+/* ===== Buttons ===== */
+.publish-btn {
+  background: #20BFA5;
+  color: white;
+  padding: 15px;
+  width: 100%;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.publish-btn:hover {
+  background: #17a18b;
+}
+
+.publish-btn:active {
+  transform: scale(0.98);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+}

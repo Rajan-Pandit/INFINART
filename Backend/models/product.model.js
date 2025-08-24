@@ -26,7 +26,7 @@ const productSchema = new mongoose.Schema({
 
   images: {
     type: [String],
-    validate: [arrayLimit, '{PATH} exceeds the limit of 5']
+    validate: [arrayLimit, "{PATH} exceeds the limit of 5"],
   },
 
   category: {
@@ -44,42 +44,29 @@ const productSchema = new mongoose.Schema({
   },
 
   inStock: {
-    type: Boolean,
-    default: true,
+    type: Number,
+    required: true,
+    default: 0,
   },
 
   tags: {
     type: [String],
   },
 
-  // ✅ Added seller-related fields
-  sellerName: {
-    type: String,
-    default: null,
-  },
-
-  occupation: {
-    type: String,
-    default: null,
-  },
-
-  storeName: {
-    type: String,
-    default: null,
-  },
-
+  // ✅ Seller-related fields (cleaned up)
   sellerId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    default: null,
+    ref: "Seller", // now points to Seller model instead of User
+    required: true,
   },
-
-  // // ✅ Added status field for approval system
-  // status: {
-  //   type: String,
-  //   enum: ["pending", "approved", "rejected"],
-  //   default: "pending",
-  // },
+  sellerName: {
+    type: String,
+    required: true,
+  },
+  storeName: {
+    type: String,
+    required: true,
+  },
 
   createdAt: {
     type: Date,
