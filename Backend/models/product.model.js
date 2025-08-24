@@ -53,6 +53,20 @@ const productSchema = new mongoose.Schema({
     type: [String],
   },
 
+  //Reviews of product - keep in mind rating and review are different but should be linked 
+  reviews: [
+    {
+      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      stars: { type: Number, min: 1, max: 5, required: true },
+      text: { type: String, default: "" },
+      photos: [{ type: String }],
+      // what are these two field do 
+      helpfulCount: { type: Number, default: 1 },
+      helpfulVoters: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
+
   // ✅ Seller-related fields (cleaned up)
   sellerId: {
     type: mongoose.Schema.Types.ObjectId,

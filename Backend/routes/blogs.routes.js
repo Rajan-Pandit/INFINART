@@ -1,13 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/user.controllers");
+const blogController = require("../controllers/blog.controllers");
 const {protect} = require("../Middleware/authMiddleware")
 const { body } = require("express-validator");
 const multer = require("multer");
 const path = require("path");
-
-
-// I should remove this from here 
 
 // ====== Multer Setup for Image Uploads ======
 const storage = multer.diskStorage({
@@ -35,37 +32,25 @@ const upload = multer({
   },
 });
 
-// ===== Routes =====
 
-// Register route
+// Routes
+
+// Create blog (with image upload)
 router.post(
-  "/register",
+  "/blog",
+  upload.single("image"),
   [
-    body("email").isEmail().withMessage("Invalid email"),
-    body("password")
-      .isLength({ min: 6 })
-      .withMessage("Password must be at least 6 characters long"),
-    body("fullname.firstname")
-      .isLength({ min: 3 })
-      .withMessage("First name must be at least 3 characters long"),
+    body("title").isLength({ min: 3 }).withMessage("Title must be at least 3 characters long"),
+    body("content").isLength({ min: 3 }).withMessage("Content must be at least 3 characters long"),
+    body("author").isLength({ min: 3 }).withMessage("Author must be at least 3 characters long"),
   ],
-  userController.registerUser
+  blogController.createBlog
 );
 
-// Login route
-router.post(
-  "/login",
-  [
-    body("email").isEmail().withMessage("Invalid email"),
-    body("password")
-      .isLength({ min: 6 })
-      .withMessage("Password must be at least 6 characters long"),
-  ],
-  userController.loginUser
-);
+// Get all blogs
+router.get("/blogs", blogController.getBlogs);
 
-// Get user profile
-router.get('/profile', protect, userController.userProfile);
-
+// Get blog by ID
+router.get("/blogs/:id", blogController.getBlog);
 
 module.exports = router;

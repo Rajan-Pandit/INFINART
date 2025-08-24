@@ -35,6 +35,28 @@ const userSchema = new mongoose.Schema({
         type: String, 
         minlength: 5,
     },
+    //updating madhav code Aug for Order flow
+    
+    // doubt why full name and all the things are different : Is this because of Different Addresses
+     savedAddress: {
+        fullName: { type: String },
+        phone: { type: String },
+        street: { type: String },
+        city: { type: String },
+        state: { type: String },
+        pincode: { type: String },
+      },
+
+       favorites: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Product' }
+    ],
+    cart: [
+      {
+        product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+        quantity: { type: Number, default: 1, min: 1 },
+        price: { type: Number, required: true }
+      }
+    ],
 });
 
 //Genrate a unique token for the user

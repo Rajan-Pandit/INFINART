@@ -1,6 +1,8 @@
 # Environment files
+*.env
 .env
 .env*
+
 
 # Node modules
 node_modules
@@ -18,5 +20,3 @@ yarn-debug.log*
 .vscode/
 .idea/
 node_modules
-
-cloudinary.js

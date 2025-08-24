@@ -4,6 +4,12 @@ const dotenv = require('dotenv');
 dotenv.config();
 const cors = require('cors');// Allow cross-origin requests
 const userRoutes = require('./routes/user.routes'); // Import user routes
+
+const blogRoutes = require('./routes/blogs.routes');
+const shipAddRoutes = require('./routes/shipAddress.routes');
+const favortiesRoutes = require('./routes/favorites.routes');
+const cartRoutes = require('./routes/cart.routes');
+
 const productRoutes = require('./routes/product.routes'); // Import product routes
 const sellerRoutes = require('./routes/seller.routes'); // Import seller routes
 const orderRoutes = require('./routes/order.routes'); // Import order routes
@@ -27,6 +33,12 @@ app.get('/check', (req, res) => {
 });
 
 app.use('/users', userRoutes); // Use user routes for API
+//new file 24 aug
+app.use('/users',shipAddRoutes);
+app.use('/users',blogRoutes);
+app.use('/users',favortiesRoutes);
+app.use('/users',cartRoutes);
+
 app.use('/products', productRoutes); // Use product routes for API
 app.use("/api/products", addProductRoutes); 
 app.use('/seller', sellerRoutes); // Use seller routes for API
