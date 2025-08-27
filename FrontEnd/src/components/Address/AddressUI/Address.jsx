@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Address.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Address = () => {
+const Address = ({ onAddressSubmit, initialData = null, isEditing = false }) => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -12,27 +12,34 @@ const Address = () => {
     address: "",
     city: "",
     state: "",
+    addressType: "home",
   });
 
+  // Update form data when initialData changes (for editing)
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    }
+  }, [initialData]);
+
   const handleChange = (e) => {
-  const { name, value } = e.target;
+    const { name, value } = e.target;
 
-  if (name === "phone") {
-    if (!/^\d{0,10}$/.test(value)) return;
-  }
+    if (name === "phone") {
+      if (!/^\d{0,10}$/.test(value)) return;
+    }
 
-  if (name === "pincode") {
-    if (!/^\d{0,6}$/.test(value)) return;
-  }
+    if (name === "pincode") {
+      if (!/^\d{0,6}$/.test(value)) return;
+    }
 
-  if (name === "name") {
-    // Allow only letters and spaces
-    if (!/^[A-Za-z\s]*$/.test(value)) return;
-  }
+    if (name === "name") {
+      // Allow only letters and spaces
+      if (!/^[A-Za-z\s]*$/.test(value)) return;
+    }
 
-  setFormData({ ...formData, [name]: value });
-};
-
+    setFormData({ ...formData, [name]: value });
+  };
 
   const validateForm = () => {
     const { name, phone, pincode, locality, address } = formData;
@@ -58,8 +65,10 @@ const Address = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      toast.success("Address saved successfully!");
-      console.log("Address Submitted:", formData);
+      // Call the parent component's callback with the address data
+      if (onAddressSubmit) {
+        onAddressSubmit(formData);
+      }
     }
   };
 
@@ -74,7 +83,7 @@ const Address = () => {
 
       try {
         const res = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`  //Api
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
         );
         const data = await res.json();
 
@@ -103,7 +112,7 @@ const Address = () => {
   return (
     <div className="address-container">
       <ToastContainer />
-      <h2>Add New Address</h2>
+      <h2>{isEditing ? "Edit Address" : "Add New Address"}</h2>
       <form className="address-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <input
@@ -173,6 +182,19 @@ const Address = () => {
           />
         </div>
 
+        <div className="form-group">
+          <select
+            name="addressType"
+            value={formData.addressType}
+            onChange={handleChange}
+            className="address-type-select"
+          >
+            <option value="home">Home</option>
+            <option value="work">Work</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
         <button
           type="button"
           onClick={useMyLocation}
@@ -182,7 +204,7 @@ const Address = () => {
         </button>
 
         <button type="submit" className="save-address-btn">
-          Save Address
+          {isEditing ? "Update Address" : "Save Address"}
         </button>
       </form>
     </div>

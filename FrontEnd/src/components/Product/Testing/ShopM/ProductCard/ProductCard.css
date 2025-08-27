@@ -1,4 +1,4 @@
-.product-card {
+.product-card22 {
   position: relative;
   width: 250px;
   height: 390px;
@@ -19,7 +19,7 @@
 
 }
 
-.product-card:hover {
+.product-card22:hover {
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   scale: 1.1;
   transition: 900ms;
@@ -57,7 +57,7 @@
   cursor: pointer;
 }
 
-.product-card:hover .favorite-btn {
+.product-card22:hover .favorite-btn {
   opacity: 1;
 }
 
@@ -71,21 +71,22 @@
   overflow: hidden;
 }
 
-.product-image {
+.product-image5 {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.1s;
 }
 
-.product-info {
+.product-card-info {
+  /* margin-top: -30px; */
   padding: 0.4rem;
   padding-left: 15px;
   flex-grow: 1;
   
 }
 
-.title {
+.product-card-title {
   font-size: 0.9rem;
   font-weight: 600;
   color: #333;
@@ -93,10 +94,11 @@
   margin-bottom: 0.5rem;
 }
 
-.rating {
+.product-card-rating {
   margin-top: 0.7rem;
   display: flex;
   gap: 2px;
+
 }
 
 .star-icon {
@@ -182,41 +184,41 @@
 }
 
 /*
-/* Remove the margin from .product-card since the gap in grid handles spacing */
-.product-card:hover {
+/* Remove the margin from .product-card22 since the gap in grid handles spacing */
+.product-card22:hover {
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   transform: scale(1); /* Use transform instead of scale for better performance */
 }
 
 /* Media queries - adjust the minmax value to ensure proper card width */
  @media (max-width: 1200px) {
-  .product-card-container {
+  .product-card22-container {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
 
 @media (max-width: 992px) {
-  .product-card-container {
+  .product-card22-container {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
-  .product-card-container {
+  .product-card22-container {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
 
 @media (max-width: 600px) {
-  .product-card-container {
+  .product-card22-container {
     grid-template-columns: 1fr;
     padding: 1rem;
   }
   
-  .product-card {
+  .product-card22 {
     width: 100%;
      max-width: 280px; 
      /* Ensures cards don't grow beyond 280px on mobile  */
   }
 } 
-  /* ShopM.css with added breadcrumb and title styles */
+ 

@@ -1,5 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Toaster } from './ui/toaster/toaster';
+import { Toaster as SonnerToaster } from 'sonner';
 import Homepage from '../pages/homepage';
 import Productpage from '../pages/productpage';
 import Loginpage from '../pages/Loginpage';
@@ -14,9 +18,19 @@ import ScrollToTop from './components/ScrollToTop.jsx';
 import SellerHandler from '../src/components/SellerPages/Handler.jsx';
 import BlogDetails from './components/Blog/BlogDetails/BlogDetails.jsx';
 import ShopDetails from './components/ShopDetails/ShopDetails.jsx';
-import Address from './components/Address/Address.jsx';
+// import Address from './components/Address/Address.jsx';
+import Order from './components/Order/Checkout/Checkout.jsx';
+import OrderPlaced from './components/Order/OrderPlaced/OrderPlaced.jsx';
+import OrderList from './components/Order/OrderList/OrderList.jsx';
+import OrderDetails from './components/Order/OrderDetails/OrderDetails.jsx';
+import AddressList from './components/Address/AddressList/AddressList.jsx';
+import FavoritesPage from './components/Favorites/FavoritesPage.jsx';
+import { useCartPersistence } from './hooks/useCartPersistence';
 
 function App() {
+  // Initialize cart persistence
+  useCartPersistence();
+
   return (
     <Router>
        <ScrollToTop/>
@@ -29,30 +43,48 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/cart" element={<Cartpage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/seller" element={<SellerHandler />} />
         <Route path="/sale" element={<Productpage />} />
-        <Route path="/profile/addresses" element={<Address />} />
-          {/* <Route path="/sale" element={<SalePage />} /> */}
-
-          <Route path="/blogs/:id" element={<BlogDetails />} />
-
-
-
-        <Route path="/:category" element={<Productpage />} />
-        <Route path="/:category/:subcategory" element={<Productpage />} />
-     <Route path="/:category/:subcategory/:productName" element={<ProductDetails />} />
-
-
         <Route path="/shops" element={<ShopPage/>} />
         <Route path="/shop-products" element={<ShopDetails/>} />
-        {/* Add more routes as needed */}
-      
+
+        {/* Order Routes */}
+        <Route path="/order-checkout" element={<Order />} />
+        <Route path="/OrderList" element={<OrderList />} />
+        <Route path="/order_Details" element={<OrderDetails />} />
+        <Route path="/order_details" element={<OrderDetails />} />
+        <Route path="/order-placed/:orderNumber" element={<OrderPlaced />} />
+        
+        {/* Address Routes */}
+        <Route path="/AddressList" element={<AddressList />} />
+
+        {/* Blog Routes */}
+        <Route path="/blogs/:id" element={<BlogDetails />} />
+
+        {/* Product Routes - Keep these at the end to prevent conflicts */}
+        <Route path="/:category" element={<Productpage />} />
+        <Route path="/:category/:subcategory" element={<Productpage />} />
+        <Route path="/:category/:subcategory/:productName" element={<ProductDetails />} />
       </Routes>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <Toaster />
+      <SonnerToaster />
     </Router>
   );
 }
 
 export default App;
-
 
 

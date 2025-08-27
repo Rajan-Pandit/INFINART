@@ -1,13 +1,9 @@
-.breadcrumb-nav {
-  /* background-color: #f9fafb; */
-  /* border-bottom: 1px solid #e5e7eb; */
-  /* padding: 0.75rem 0; */
-}
+
 
 .breadcrumb-container {
   max-width: 1200px;
   margin: 0 ;
-  margin-left: 5.9rem ; 
+  margin-left: 6.3rem ; 
   padding: 0 1rem;
 }
 
@@ -49,10 +45,11 @@
   padding: 0.25rem 0.5rem;
 }
 
-.breadcrumb-separator {
+.breadcrumb-separator2 {
   color: #d1d5db;
   display: flex;
   align-items: center;
+  padding-top: 5px;
 }
 
 .sr-only {

@@ -5,13 +5,14 @@
   align-items: center;
 }
 
-.section-title {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  text-align: left;
-  max-width: 1260px;
-  margin-left: auto;
-  margin-right: auto;
+.best-sellers-title {
+  font-size: 2rem;   
+  font-weight: bold; 
+  /* font-family:'Times New Roman', Times, serif; */
+  text-align: center;
+  color: #008080;    
+  margin-bottom: 30px;   
+  padding-bottom: 5px;
 }
 
 .slider-wrapper {
@@ -21,29 +22,21 @@
   position: relative;
   max-width: 1260px;
   margin: 0 auto;
-  border: 1px solid #aaa;
+  border: none;
   padding: 1rem;
-  border-radius: 10px;
-  background-color: #fff;
+  border-radius: 20px;
+  background: #f6ffff;
+  box-shadow: 0 6px 20px rgba(0, 128, 128, 0.368);
 }
 
-.slider {
-  display: flex;
-  gap: 2rem;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding: 1rem 0;
-}
-
-.seller-card {
-  flex: 0 0 auto;
-  text-align: center;
+.seller-card:hover {
+  transform: translateY(-5px);
 }
 
 .image-wrapper {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   overflow: hidden;
 }
@@ -52,14 +45,15 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
-  border: 4px solid #eee;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  border-radius: 70%;
+  border: 4px solid #20bfa5;
+  box-shadow: 0 4px 15px #20BFA5;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .image-wrapper:hover img {
   transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(1, 51, 51, 0.422);
 }
 
 .shop-details {
@@ -69,7 +63,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 128, 128, 0.7);
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -92,37 +86,91 @@
 
 .shop-details span {
   font-size: 0.9rem;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
-.seller-card p {
+.shop-name {
   margin-top: 0.5rem;
-  font-weight: 500;
-  font-size: 1rem;
+  font-weight: 600;
+  font-size: 1.05rem;
   color: #333;
+  transition: color 0.3s ease;
 }
 
-.arrow {
-  background-color: #fff;
-  border: none;
-  font-size: 2rem;
+.seller-card:hover .shop-name {
+  color: #20BFA5;
+}
+
+.carousel {
+  position: relative;  /* important so arrows position relative to carousel */
+  padding: 0 50px;
+}
+
+.slider {
+  display: flex;
+  gap: 0.5rem;                /* space between circles */
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+  scroll-snap-type: x mandatory; /* snap for smoother scrolling */
+}
+
+.seller-card {
+  flex: 0 0 calc(100% / 4); /* 3 per row */
+  display: flex;
+  flex-direction: column;   /* stack vertically */
+  align-items: center;      /* center horizontally */
+  justify-content: flex-start;
+  text-align: center;       /* center text */
   cursor: pointer;
-  padding: 0 1rem;
+  transition: transform 0.3s ease;
+  scroll-snap-align: center;
+}
+
+.seller-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 0.5rem;  /* space between circle & text */
+}
+
+.seller-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  text-align: center;      /* ensure text is centered */
+}
+
+.carousel-arrow {
+  width: 50px;
+  height: 50px;
+  background-color: #a8a8a8;  /* gray background like your image */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;   /* makes it circular */
+  cursor: pointer;
+  font-size: 24px;      /* bigger arrow */
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 10;
-  color: #444;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, background 0.3s ease;
+  border: none;
 }
 
-.arrow:hover {
-  transform: scale(1.2);
+.carousel-arrow:hover {
+  background-color: #808080; /* darker gray on hover */
+  transform: translateY(-50%) scale(1.15);
 }
 
-.left {
-  position: absolute;
-  left: 0;
+.prev {
+  left: -70px;
 }
 
-.right {
-  position: absolute;
-  right: 0;
+.next {
+  right: -70px;
 }
+

@@ -6,6 +6,7 @@ import { Star, Heart, ShoppingCart, Plus, Minus, ChevronLeft, ChevronRight } fro
 import { toast } from "sonner";
 import { Button } from "../../../../ui/Button";
 import RatingStars from "../../RatingStars/RatingStars.jsx";
+import ProductReviews from "../../../Review/ProductReview/ProductReview.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import Breadcrumb from "../ShopM/Breadcrumb/Breadcrumb.jsx";
 import Navbar from "../../../Navbar/Navbar";
@@ -19,8 +20,8 @@ import {
   DialogFooter,
 } from "../../../../ui/dialog";
 import "./ProductDetails.css";
-import { addToCart } from "../../../../Redux/cartSlice";
-import { toggleFavorite } from "../../../../Redux/favoritesSlice";
+import { addToCartWithBackendSync } from "../../../../Redux/cartSlice";
+import { addFavoriteToBackend, removeFavoriteFromBackend } from "../../../../Redux/favoritesSlice";
 
 export const slugify = (str) =>
   str.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -35,10 +36,8 @@ const ProductDetails = () => {
   const cart = useSelector((state) => state.cart.cartItems);
 
   useEffect(() => {
-    if (allProducts.length === 0) {
-      dispatch(fetchProducts());
-    }
-  }, [dispatch, allProducts.length]);
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   const product = allProducts.find(
     (p) =>
@@ -90,32 +89,66 @@ const ProductDetails = () => {
     }
   };
 
-  const handleAddToCart = () => {
-    dispatch(
-      addToCart({
-        id: product._id || product.id,
-        name: product.name,
-        price: product.price,
-        image: product.images[0],
-        quantity,
-      })
-    );
-    toast.success(`${quantity} x ${product.name} added to cart!`);
+  const handleAddToCart = async () => {
+    try {
+      await dispatch(
+        addToCartWithBackendSync({
+          id: product._id ,
+          name: product.name,
+          price: product.price,
+          image: product.images[0],
+          quantity,
+        })
+      ).unwrap();
+      toast.success(`${quantity} x ${product.name} added to cart!`);
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+      toast.error('Failed to add to cart');
+    }
   };
 
-  const handleBuyNow = () => {
-    setShowBuyNowDialog(true);
+  const handleBuyNow = async () => {
+    try {
+      // Buy now is completely independent of add to cart
+      // Navigate directly to checkout with product info in URL params or state
+      navigate("/order-checkout", {
+        state: {
+          buyNowProduct: {
+            id: product._id,
+            name: product.name,
+            price: product.price,
+            image: product.images[0],
+            quantity: quantity,
+            category: product.category,
+            subcategory: product.subcategory
+          },
+          isBuyNow: true
+        }
+      });
+    } catch (error) {
+      console.error('Failed to process buy now:', error);
+      toast.error('Failed to process buy now request');
+    }
   };
 
-  const handleFavoriteToggle = () => {
-    dispatch(toggleFavorite(product._id || product.id));
-    const isFavorite = favorites.includes(product.name);
-    toast.success(
-      `${product.name} ${isFavorite ? "removed from" : "added to"} favorites`
-    );
+  const handleFavoriteToggle = async () => {
+    if (!product) return;
+    
+    try {
+      if (isFavorite) {
+        await dispatch(removeFavoriteFromBackend(product._id)).unwrap();
+        toast.success(`${product.name} removed from favorites`);
+      } else {
+        await dispatch(addFavoriteToBackend(product._id)).unwrap();
+        toast.success(`${product.name} added to favorites`);
+      }
+    } catch (error) {
+      console.error('Failed to toggle favorite:', error);
+      toast.error('Failed to update favorites');
+    }
   };
 
-  const isFavorite = favorites.includes(product.name);
+  const isFavorite = favorites.includes(product._id);
 
   const discount =
     product?.originalPrice && product.price < product.originalPrice
@@ -140,8 +173,17 @@ const ProductDetails = () => {
     return items;
   };
 
-  if (loading || allProducts.length === 0) {
-    return <div className="loading-message">Loading product...</div>;
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading product...</p>
+        </div>
+        <Footersec />
+      </>
+    );
   }
 
   if (!product) {
@@ -264,16 +306,16 @@ const ProductDetails = () => {
             )}
           </div>
 
-          <div className={`product-details ${showZoom ? "details-dimmed" : ""}`}>
-            <h1 className="product-title">{product.name}</h1>
+          <div className={`product-card-details ${showZoom ? "details-dimmed" : ""}`}>
+            <h1 className="product-title1">{product.name}</h1>
 
-            <div className="rating-container">
+            <div className="rating-container23">
               <RatingStars rating={product.rating} />
             </div>
 
             <div className="price-container">
               <div className="price-wrapper">
-                <span className="current-price">₹{product.price}</span>
+                <span className="current-price1">₹{product.price}</span>
                 {product.originalPrice && (
                   <span className="original-price">₹{product.originalPrice}</span>
                 )}
@@ -333,11 +375,11 @@ const ProductDetails = () => {
               </div>
             </div>
 
-            <div className="action-buttons">
+            <div className="action-buttons1">
               <Button
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
-                className="add-to-cart-btn"
+                className="add-to-cart-btn1"
               >
                 <ShoppingCart size={18} />
                 <span>Add to Cart</span>
@@ -390,6 +432,7 @@ const ProductDetails = () => {
           </DialogContent>
         </Dialog>
       )}
+      <ProductReviews productId={product._id} />
       <Footersec />
     </>
   );

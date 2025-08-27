@@ -1,25 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { Heart, Star } from "lucide-react";
+import { Heart } from "lucide-react";
 import RatingStars from "../../../../Product/RatingStars/RatingStars.jsx";
-import { addToCart } from "../../../../../Redux/cartSlice.js"; // ✅ adjust path if needed
+import { addToCartWithBackendSync } from "../../../../../Redux/cartSlice.js";
+import { addFavoriteToBackend, removeFavoriteFromBackend } from "../../../../../Redux/favoritesSlice";
+import { toast } from 'react-toastify';
 import "./ProductCard.css";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const { user, token } = useSelector((state) => state.user);
+  const { items: favoritesIds } = useSelector((state) => state.favorites);
   const [isHovering, setIsHovering] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  const isFavorite = favoritesIds.includes(product._id);
+
   useEffect(() => {
     let interval;
-    if (isHovering && product.images.length > 1) {
+    if (isHovering && product.images && product.images.length > 1) {
       interval = setInterval(() => {
         setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
       }, 2000);
     }
     return () => clearInterval(interval);
-  }, [isHovering, product.images.length]);
+  }, [isHovering, product.images]);
 
   const calculateDiscount = (actual, striked) => {
     if (!actual || !striked || striked <= actual) return 0;
@@ -27,44 +33,75 @@ const ProductCard = ({ product }) => {
   };
 
   const discount = calculateDiscount(product.price, product.originalPrice);
-  // Helper function to generate URL slugs
-  
+
   const slugify = (str) => str.toLowerCase().replace(/[\s&]+/g, "-");
 
   const categorySlug = product.category
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
+    ? product.category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+    : "products";
 
   const subcategorySlug = product.subcategory
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
+    ? product.subcategory.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+    : "general";
 
-      const productNameSlug = product.name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
+  const productNameSlug = product.name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
- 
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  const handleAddToCart = (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+    if (!user || !token) {
+      toast.error('Please login to add items to cart');
+      return;
+    }
 
-  dispatch(addToCart({
-    id: product.id,
-    name: product.name,
-    price: product.price,
-    image: product.images[0], // or fallback to a placeholder
-  }));
-};
+    try {
+      await dispatch(
+        addToCartWithBackendSync({
+          id: product._id,
+          name: product.name,
+          price: product.price,
+          image: product.images?.[0] || product.image,
+        })
+      ).unwrap();
+
+      toast.success('Added to cart!');
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+      toast.error('Failed to add to cart');
+    }
+  };
+
+  const handleFavoriteToggle = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!user || !token) {
+      toast.error('Please login to add favorites');
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await dispatch(removeFavoriteFromBackend(product._id)).unwrap();
+        toast.success('Removed from favorites');
+      } else {
+        await dispatch(addFavoriteToBackend(product._id)).unwrap();
+        toast.success('Added to favorites');
+      }
+    } catch (error) {
+      console.error('Failed to toggle favorite:', error);
+      toast.error('Failed to update favorites');
+    }
+  };
 
   return (
     <Link
-    
       to={`/${categorySlug}/${subcategorySlug}/${productNameSlug}`}
-      className="product-card"
+      className="product-card22"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => {
         setIsHovering(false);
@@ -74,21 +111,20 @@ const ProductCard = ({ product }) => {
       {discount > 0 && <div className="discount-badge1">{discount}% OFF</div>}
 
       <button
-        className={`favorite-btn ${isHovering ? "visible" : "hidden"}`}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          alert("Favorite functionality is disabled in this version.");
-        }}
+        className={`favorite-btn ${isHovering ? "visible" : "hidden"} ${
+          isFavorite ? "active" : ""
+        }`}
+        onClick={handleFavoriteToggle}
+        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
       >
-        <Heart size={20} fill="none" />
+        <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />
       </button>
 
       <div className="image-container">
         <img
-          src={product.images[currentImageIndex]}
+          src={product.images?.[currentImageIndex] || product.images?.[0] || product.image}
           alt={product.name}
-          className="product-image"
+          className="product-image5"
           loading="lazy"
           onError={(e) => {
             e.target.onerror = null;
@@ -97,10 +133,10 @@ const ProductCard = ({ product }) => {
         />
       </div>
 
-      <div className="product-info">
-        <h3 className="title">{product.name}</h3>
-        <div className="rating">
-          <RatingStars rating={product.rating} />
+      <div className="product-card-info">
+        <h3 className="product-card-title">{product.name}</h3>
+        <div className="product-card-rating">
+          <RatingStars rating={product.rating || 0} />
         </div>
         <div className="price-stock">
           <div className="price">

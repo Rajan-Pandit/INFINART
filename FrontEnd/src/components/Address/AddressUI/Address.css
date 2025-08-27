@@ -29,13 +29,19 @@
 }
 
 .address-form input,
-.address-form textarea {
+.address-form textarea,
+.address-form select {
   flex: 1;
   padding: 10px 12px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 8px;
   outline: none;
+}
+
+.address-type-select {
+  background-color: white;
+  cursor: pointer;
 }
 
 .address-form textarea {
