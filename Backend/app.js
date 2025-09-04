@@ -15,7 +15,8 @@ const sellerRoutes = require('./routes/seller.routes'); // Import seller routes
 const orderRoutes = require('./routes/order.routes'); // Import order routes
 const sellerPanelRoutes = require('./routes/SellerPanel.routes');
 const addProductRoutes = require("./routes/addProduct.routes");
-const addressRoutes = require("./routes/address.routes")
+const addressRoutes = require("./routes/address.routes");
+const invoiceRoutes = require('./routes/invoice.routes');
 
 const connectDB = require('./db/db'); 
 connectDB(); // Connect to MongoDB
@@ -44,6 +45,12 @@ app.use('/products', productRoutes); // Use product routes for API
 app.use("/api/products", addProductRoutes); 
 app.use('/seller', sellerRoutes); // Use seller routes for API
 app.use("/api/orders", orderRoutes); // ✅ Mount orders route
+
+app.get('/api/document', (req, res) => {
+  res.send('Hello document!');
+});
+
+app.use("/api/document", invoiceRoutes); // Mount Invoice Route
 
 app.use("/api/addresses", addressRoutes); // ✅ Mount address routes
 

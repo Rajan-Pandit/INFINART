@@ -6,6 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Image from "../../../Images/img_png.png";
 import ReviewCard from "../../Review/ReviewCard/ReviewCard";
 import OrderReview from "../OrderReview/OrderReview";
+import { downloadInvoice, downloadLabel } from "../../../Redux/documentSlice";
+
 
 
 import { User } from "lucide-react";
@@ -181,6 +183,40 @@ const selectedItem = React.useMemo(() => {
       toast.error(err.message || "Failed to cancel order");
     }
   };
+
+  // Handle Invoice Download 
+
+  const handleDownloadInvoice = async () => {
+  console.log("Invoice button clicked, orderId:", currentOrder?._id);
+  if (!currentOrder?._id) {
+    console.warn("No orderId found for invoice");
+    return;
+  }
+  try {
+    await dispatch(downloadInvoice(currentOrder._id)).unwrap();
+    console.log("Invoice download dispatched");
+  } catch (err) {
+    console.error("Invoice download error:", err);
+    toast.error(err || "Failed to download invoice");
+  }
+};
+
+const handleDownloadLabel = async () => {
+  console.log("Label button clicked, orderId:", currentOrder?._id);
+  if (!currentOrder?._id) {
+    console.warn("No orderId found for label");
+    return;
+  }
+  try {
+    await dispatch(downloadLabel(currentOrder._id)).unwrap();
+    console.log("Label download dispatched");
+  } catch (err) {
+    console.error("Label download error:", err);
+    toast.error(err || "Failed to download label");
+  }
+};
+
+
 
   const handleRatingSubmit = async () => {
     // if (rating === 0) {
@@ -584,7 +620,7 @@ const selectedItem = React.useMemo(() => {
                   <div className="price-total-row">
                     <span>Total Amount</span>
                     <span>
-                      ₹{Math.round(selectedItem?.price || 0)}
+                       ₹{currentOrder?.totalAmount || calculateTotal(currentOrder.products || [])}
                     </span>
                   </div>
                 </div>
@@ -592,31 +628,37 @@ const selectedItem = React.useMemo(() => {
             </div>
 
             {/* Action Buttons */}
-            <div className="action-buttons-container">
-              {/* Download Invoice Button */}
-              <button className="download-button">
-                <Download className="download-icon" />
-                Download Invoice
-              </button>
+            {/* Action Buttons */}
+<div className="action-buttons-container">
 
-              {/* Cancel Order Button - Only show for Processing status */}
-              {(currentOrder.deliveryStatus || "").toLowerCase() ===
-                "processing" && (
-                <button onClick={handleCancelOrder} className="cancel-button">
-                  <X className="cancel-icon" />
-                  Cancel Order
-                </button>
-              )}
+  {/* Always visible buttons */}
+  {[
+    { label: "Download Invoice", onClick: handleDownloadInvoice, Icon: Download },
+    { label: "Download Label", onClick: handleDownloadLabel, Icon: Download },
+  ].map(({ label, onClick, Icon }) => (
+    <button key={label} className="download-button" onClick={onClick}>
+      <Icon className="download-icon" />
+      {label}
+    </button>
+  ))}
 
-              {/* Show cancelled message if order is cancelled */}
-              {(currentOrder.deliveryStatus || "").toLowerCase() ===
-                "cancelled" && (
-                <button disabled className="cancel-button cancelled">
-                  <X className="cancel-icon" />
-                  Order Cancelled
-                </button>
-              )}
-            </div>
+  {/* Cancel / Cancelled button */}
+  {(currentOrder.deliveryStatus || "").toLowerCase() === "processing" && (
+    <button onClick={handleCancelOrder} className="cancel-button">
+      <X className="cancel-icon" />
+      Cancel Order
+    </button>
+  )}
+
+  {(currentOrder.deliveryStatus || "").toLowerCase() === "cancelled" && (
+    <button disabled className="cancel-button cancelled">
+      <X className="cancel-icon" />
+      Order Cancelled
+    </button>
+  )}
+
+</div>
+
           </div>
         </div>
       </div>
