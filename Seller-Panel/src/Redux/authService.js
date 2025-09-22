@@ -1,32 +1,52 @@
+// src/Redux/authService.js
 import axios from "axios";
 
 // PLACE BACKEND URL HERE
 const API_URL = {
-  REGISTER: "http://localhost:5000/api/seller/register", // Change to your backend endpoint
-  LOGIN: "http://localhost:5000/api/seller/login",       // Change to your backend endpoint
+  REGISTER: "http://localhost:5000/api/seller/register", 
+  LOGIN: "http://localhost:5000/api/seller/login",       
 };
 
 // REGISTER SELLER
 const registerSeller = async (sellerData) => {
-  const response = await axios.post(API_URL.REGISTER, sellerData);
-  if (response.data.token) {
-    localStorage.setItem("sellerToken", response.data.token);
+  try {
+    const response = await axios.post(API_URL.REGISTER, sellerData);
+    
+    if (response.data.success && response.data.token) {
+      localStorage.setItem("sellerToken", response.data.token);
+      localStorage.setItem("sellerData", JSON.stringify(response.data.seller));
+    }
+    
+    return response.data;
+  } catch (error) {
+    console.error('Registration error:', error);
+    const message = error.response?.data?.message || error.message || 'Registration failed';
+    throw new Error(message);
   }
-  return response.data;
 };
 
 // LOGIN SELLER
 const loginSeller = async (loginData) => {
-  const response = await axios.post(API_URL.LOGIN, loginData);
-  if (response.data.token) {
-    localStorage.setItem("sellerToken", response.data.token);
+  try {
+    const response = await axios.post(API_URL.LOGIN, loginData);
+    
+    if (response.data.success && response.data.token) {
+      localStorage.setItem("sellerToken", response.data.token);
+      localStorage.setItem("sellerData", JSON.stringify(response.data.seller));
+    }
+    
+    return response.data;
+  } catch (error) {
+    console.error('Login error:', error);
+    const message = error.response?.data?.message || error.message || 'Login failed';
+    throw new Error(message);
   }
-  return response.data;
 };
 
 // LOGOUT
 const logout = () => {
   localStorage.removeItem("sellerToken");
+  localStorage.removeItem("sellerData");
 };
 
 const authService = {

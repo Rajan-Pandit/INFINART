@@ -18,6 +18,9 @@ const addProductRoutes = require("./routes/addProduct.routes");
 const addressRoutes = require("./routes/address.routes");
 const invoiceRoutes = require('./routes/invoice.routes');
 
+const dashboardRoutes = require('./routes-seller-panel/dashboard.routes');
+const productInfoRoutes = require("./routes-seller-panel/productInfo.routes");
+
 const connectDB = require('./db/db'); 
 connectDB(); // Connect to MongoDB
 app.use(cors());
@@ -53,8 +56,11 @@ app.get('/api/document', (req, res) => {
 app.use("/api/document", invoiceRoutes); // Mount Invoice Route
 
 app.use("/api/addresses", addressRoutes); // ✅ Mount address routes
-
+// Seller Panel Routes
 app.use("/api/seller", sellerPanelRoutes);
+app.use("/api/dashboard", dashboardRoutes); 
+app.use("/api/productinfo", productInfoRoutes);
+
 
 
 

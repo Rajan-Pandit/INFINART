@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { MdOutlineDashboard } from 'react-icons/md'; 
 import {
   FiShoppingCart,
@@ -17,9 +18,16 @@ import './Sidebar.css';
 
 const Sidebar = () => {
   const [isProductDropdownOpen, setProductDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleProductDropdown = () => {
     setProductDropdownOpen(!isProductDropdownOpen);
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("sellerToken");
+    localStorage.removeItem("sellerData");
+    navigate("/login"); // redirect to login
   };
 
   return (
@@ -31,18 +39,20 @@ const Sidebar = () => {
         </div>
 
         <div className="sidebar-nav">
-          <div className="nav-item">
+          <Link to="/home" className="nav-item">
             <MdOutlineDashboard size={18} />
-            Dashboard
-          </div>
-          <div className="nav-item">
+            Overview
+          </Link>
+
+          <Link to="/statistics" className="nav-item">
             <FiBarChart2 size={18} />
             Statistics
-          </div>
-          <div className="nav-item">
+          </Link>
+
+          <Link to="/orders" className="nav-item">
             <FiShoppingCart size={18} />
             Orders
-          </div>
+          </Link>
 
           {/* Products Dropdown */}
           <div className="nav-item dropdown" onClick={toggleProductDropdown}>
@@ -55,33 +65,34 @@ const Sidebar = () => {
 
           {isProductDropdownOpen && (
             <div className="dropdown-menu">
-              <div className="dropdown-item">All Products</div>
-              <div className="dropdown-item">Add Product</div>
+              <Link to="/products" className="dropdown-item">All Products</Link>
+              <Link to="/products/add" className="dropdown-item">Add Product</Link>
             </div>
           )}
 
-          <div className="nav-item">
+          <Link to="/inventory" className="nav-item">
             <FiPackage size={18} />
             Inventory
-          </div>
+          </Link>
 
-          <div className="nav-item">
+          <Link to="/settings" className="nav-item">
             <FiSettings size={18} />
             Settings
-          </div>
+          </Link>
         </div>
       </div>
 
       <div className="sidebar-footer">
-        <div className="user-info">
+        <Link to="/profile" className="user-info">
           <FaUserCircle size={28} />
           <div className="user-info-text">
             <strong>STORE NAME</strong>
             <br />
             <small>storename@example.com</small>
           </div>
-        </div>
-        <div className="sign-out-btn">
+        </Link>
+
+        <div className="sign-out-btn" onClick={handleSignOut}>
           <FiLogOut size={16} />
           Sign Out
         </div>

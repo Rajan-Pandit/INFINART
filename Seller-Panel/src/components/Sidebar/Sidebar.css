@@ -1,3 +1,4 @@
+/* Sidebar container */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -14,125 +15,144 @@
   overflow-y: auto;
 }
 
-
-  .sidebar-header {
-    background-color: #f9fafb;
-    padding: 16px 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    /* border-bottom: 5px solid #d1d5db; */
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    border: solid 1px #20BFA5;
-  }
-
-  .sidebar-header h2 {
-    font-size: 16px;
-    font-weight: 700;
-    margin: 0;
-  }
-
-  .sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    padding: 16px 12px;
-    gap: 20px;
-    flex-grow: 1;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-  }
-
-  .sidebar-footer {
-    background-color: #d4d4d4;
-    padding: 16px 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-top: 1px solid #d1d5db;
-    margin-top: -100px;
-  }
-
-  .user-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
-  .user-info-text {
-    text-align: left;
-  }
-
-  .user-info-text strong {
-    font-size: 15px;
-    font-weight: 700;
-  }
-
-  .user-info-text small {
-    font-size: 12px;
-    color: #4b5563;
-  }
-
-  .sign-out-btn {
-    padding: 8px 16px;
-    background-color: white;
-    border-radius: 9999px;
-    border: 1px solid #9ca3af;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  .sign-out-btn:hover {
-    background-color: #f3f4f6;
-  }
-
-
-  /* css for a dropdown - tushar */
-
-  .dropdown-menu {
-    margin-left: 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 4px;
-  }
-
-  .dropdown-item {
-    font-size: 0.92em;
-    color: #444;
-    cursor: pointer;
-    padding: 4px 0;
-    transition: color 0.2s ease;
-  }
-
-  .dropdown-item:hover {
-    color: #20BFA5;
-  }
-
-  .nav-item.dropdown {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-
-  .nav-item-label {
+/* Header */
+.sidebar-header {
+  background-color: #f9fafb;
+  padding: 16px 12px;
   display: flex;
-  align-items: center;      /* Aligns icon and text vertically */
-  gap: 6px;                 /* Space between icon and text */
+  align-items: center;
+  gap: 10px;
+  margin: 5px;
+  border-radius: 5px;
+  border: solid 1px #20BFA5;
+}
+
+.sidebar-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Navigation */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  gap: 20px;
+  flex-grow: 1;
+}
+
+/* Reset links to inherit styles */
+.sidebar a {
+  text-decoration: none;   /* remove underline */
+  color: inherit;          /* inherit color */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Nav item styling */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Dropdown nav item */
+.nav-item.dropdown {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.nav-item-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  margin-left: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+/* Dropdown items (links included) */
+.dropdown-item {
+  font-size: 0.92em;
+  color: #444;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  color: #20BFA5;
+  text-decoration: none;  /* ensure hover doesn’t underline */
+}
+
+/* Sidebar footer */
+.sidebar-footer {
+  background-color: #d4d4d4;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top: 1px solid #d1d5db;
+  margin-top: -100px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.user-info-text {
+  text-align: left;
+}
+
+.user-info-text strong {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.user-info-text small {
+  font-size: 12px;
+  color: #4b5563;
+}
+
+/* Sign out button */
+.sign-out-btn {
+  padding: 8px 16px;
+  background-color: white;
+  border-radius: 9999px;
+  border: 1px solid #9ca3af;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.sign-out-btn:hover {
+  background-color: #f3f4f6;
+}
+
+/* Hover effect for all links */
+.sidebar a:hover,
+.sidebar .dropdown-item:hover {
+  color: #20BFA5;
 }

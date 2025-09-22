@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../src/components/LoginForm/LoginForm";
 import { loginSeller, resetAuthState } from "../src/Redux/authSlice";
+import "./LoginPage.css";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -27,16 +28,16 @@ const LoginPage = () => {
     };
   }, [isSuccess, seller, navigate, dispatch]);
 
-  return (
-    <div>
-      {isLoading && <p style={{ textAlign: "center" }}>Loading...</p>}
-      {isError && (
-        <p style={{ textAlign: "center", color: "red" }}>{message}</p>
-      )}
+return (
+  <div className="login-page">
+    <div className="login-box">
+      {isLoading && <p className="login-message loading">Loading...</p>}
+      {isError && <p className="login-message error">{message}</p>}
 
       <LoginForm onSubmit={handleLogin} />
     </div>
-  );
+  </div>
+);
 };
 
 export default LoginPage;

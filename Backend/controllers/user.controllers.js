@@ -9,7 +9,7 @@ module.exports.registerUser = async (req, res, next) => {
     return res.status(404).json({ errors: error.array() });
   }
 
-  console.log(req.body); // remove this later 
+  console.log(req.body); // remove this later email , first name , password 
   const { fullname, email, password } = req.body;
 
   if (!fullname || !fullname.firstname || !fullname.lastname) {
@@ -17,7 +17,7 @@ module.exports.registerUser = async (req, res, next) => {
   }
 
   const { firstname, lastname } = fullname;
-  const hashedPassword = await userModel.hashPassword(password); //Hasing Password
+  const hashedPassword = await userModel.hashPassword(password); //Hashing Password
 
   const user = await userService.createUser({
     firstname,
@@ -44,18 +44,18 @@ module.exports.loginUser = async (req, res, next) => {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
-  const user = await userModel.findOne({ email }).select('+password');
+  const user = await userModel.findOne({ email }).select('+password'); 
 
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
   }
 
-  const isMatch = await user.comparePassword(password); // comparing password 
+  const isMatch = await user.comparePassword(password); // comparing password // doubt how it is calling usermodel -- c
   if (!isMatch) {
     return res.status(400).json({ message: 'Invalid credentials' });
   }
 
-  const token = await user.generateAuthToken(); // Genrating token 
+  const token = await user.generateAuthToken(); // Genrating token -- session problem in website  
   res.status(200).json({ token, user });
 };
 

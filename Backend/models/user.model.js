@@ -62,18 +62,18 @@ const userSchema = new mongoose.Schema({
 //Genrate a unique token for the user
 userSchema.methods.generateAuthToken = async function () {
 
-    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
     return token;
 }
 
 // Compare the password with the hashed password
 userSchema.methods.comparePassword = async function (password) {
-    return await bcrypt.compare(password, this.password);
+    return await bcrypt.compare(password, this.password); 
 }
 
 // Hash the password before saving the user to the database
 userSchema.statics.hashPassword = async function (password) {
-    return await bcrypt.hash(password, 10);
+    return await bcrypt.hash(password, 10); // 6 === 10 digit encr
 }   
 
 

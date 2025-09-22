@@ -107,15 +107,17 @@ const Navbar = () => {
                   >
                     {/* ✅ navigate to seller profile */}
                     <MenuItem
-                      onClick={() => {
-                        handleClose();
-                        navigate('/seller/profile'); 
+                      onClick={(event) => {
+                        navigate('/seller/profile');
+                        handleClose(event);
                       }}
                     >
                       Profile
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>My Account</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <MenuItem onClick={(event) => {
+                        navigate('/login');
+                        handleClose(event);
+                      }}>Logout</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
