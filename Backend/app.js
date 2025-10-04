@@ -37,7 +37,8 @@ app.get('/check', (req, res) => {
   res.send('Hello World!');
 });
 
-app.use('/users', userRoutes); // Use user routes for API
+app.use('/users', userRoutes);    // Use user routes for API
+
 //new file 24 aug
 app.use('/users',shipAddRoutes);
 app.use('/users',blogRoutes);

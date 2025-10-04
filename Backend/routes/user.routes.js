@@ -1,3 +1,4 @@
+// routes/user.routes.js
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controllers");
@@ -5,9 +6,6 @@ const {protect} = require("../Middleware/authMiddleware")
 const { body } = require("express-validator");
 const multer = require("multer");
 const path = require("path");
-
-
-// I should remove this from here 
 
 // ====== Multer Setup for Image Uploads ======
 const storage = multer.diskStorage({
@@ -37,7 +35,7 @@ const upload = multer({
 
 // ===== Routes =====
 
-// Register route
+// Register route - creates unverified user & sends OTP
 router.post(
   "/register",
   [
@@ -52,7 +50,26 @@ router.post(
   userController.registerUser
 );
 
-// Login route
+// Verify OTP route
+router.post(
+  "/verify-otp",
+  [
+    body("email").isEmail().withMessage("Invalid email"),
+    body("otp").isLength({ min: 4 }).withMessage("Invalid OTP"),
+  ],
+  userController.verifyOtp
+);
+
+// Resend OTP
+router.post(
+  "/resend-otp",
+  [
+    body("email").isEmail().withMessage("Invalid email")
+  ],
+  userController.resendOtp
+);
+
+// Login route (only verified users can login)
 router.post(
   "/login",
   [
@@ -66,6 +83,5 @@ router.post(
 
 // Get user profile
 router.get('/profile', protect, userController.userProfile);
-
 
 module.exports = router;

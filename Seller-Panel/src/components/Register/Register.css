@@ -1,67 +1,99 @@
-.registration-container {
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.register-background {
+  position: relative;
+  background-image: url("https://images.unsplash.com/photo-1581985377113-230c76371627?q=80&w=2070&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: #f4f7fb;
+  overflow: hidden;
 }
 
-.form-card {
-  background: white;
-  padding: 25px;
-  width: 400px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+.register-background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 23, 139, 0.4);
+  mix-blend-mode: overlay;
+  z-index: 1;
 }
 
-.form-card h2 {
+.register-container {
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 20px;
+  width: 340px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin-bottom: 20px;
-  color: #222;
+  color: white;
 }
 
-input, select {
+.register-container h2 {
+  margin-bottom: 20px;
+}
+
+.register-container label {
+  display: block;
+  text-align: left;
+  margin: 10px 0 5px;
+}
+
+.register-container input[type="text"],
+.register-container input[type="email"],
+.register-container input[type="password"] {
   width: 100%;
   padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-input:focus, select:focus {
-  border-color: #0077ff;
-  outline: none;
-}
-
-.form-navigation {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
-}
-
-.form-navigation button {
-  padding: 8px 16px;
   border: none;
-  background: #0077ff;
+  border-bottom: 1px solid white;
+  background: transparent;
   color: white;
-  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.register-container input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.register-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
   cursor: pointer;
+  color: #333;
+  margin-top: 20px;
 }
 
-.form-navigation button:hover {
-  background: #005dc1;
+.register-container p {
+  margin-top: 15px;
+  font-size: 0.9em;
 }
 
-.step-indicator {
-  text-align: center;
+.register-container a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.error-msg {
   margin-top: 10px;
-  font-size: 14px;
-  color: gray;
+  color: #ff6b6b;
+  font-size: 0.9em;
 }
 
-.review-text {
-  font-size: 14px;
-  color: #444;
-  margin-top: 10px;
+.otp-msg {
+  font-size: 0.85em;
+  margin-bottom: 15px;
+  color: #d3d3d3;
 }

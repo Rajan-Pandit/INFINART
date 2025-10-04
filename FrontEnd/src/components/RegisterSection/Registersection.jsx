@@ -1,12 +1,9 @@
-// User fills form ➡️ frontend dispatches Redux action (like `registerUser`) ➡️ Redux action sends data to backend API ➡️ backend saves user in MongoDB and returns `{ user, token }` ➡️ Redux reducer (`authSlice`) stores user and token in Redux store ➡️ optionally, `authSlice` also updates localStorage with the user and token.
- 
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Registersection.css';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../Redux/authSlice'; // adjust path as needed
+import { registerUser } from '../../Redux/authSlice';
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -14,29 +11,30 @@ const Register = () => {
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const [userEmail, setUserEmail] = useState(""); 
   const [password, setPassword] = useState("");
 
-  const { user, token, loading, error } = useSelector((state) => state.user);
+  const authState = useSelector((state) => state.auth || {});
+  const { loading = false, error = null } = authState;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const user = {
+
+    const userData = {
       fullname: {
         firstname: firstName,
         lastname: lastName,
       },
-      email,
+      email: userEmail,
       password,
     };
-    dispatch(registerUser(user));
-  };
 
-  useEffect(() => {
-    if (user && token) {
-      navigate('/');
-    }
-  }, [user, token, navigate]);
+    // console.log("Sending userData:", userData);
+    dispatch(registerUser(userData));
+
+    // ✅ Navigate immediately to verify OTP page
+navigate("/verifyotp", { state: { email: userEmail } });
+  };
 
   return (
     <div className="register-background">
@@ -64,8 +62,8 @@ const Register = () => {
           <label>Email</label>
           <input
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={userEmail}
+            onChange={(e) => setUserEmail(e.target.value)}
             type="email"
             placeholder="Enter your email"
           />
@@ -80,7 +78,7 @@ const Register = () => {
           />
 
           <button type="submit" disabled={loading}>
-            {loading ? "Registering..." : "Register"}
+            {loading ? "Sending OTP..." : "Register"}
           </button>
         </form>
 

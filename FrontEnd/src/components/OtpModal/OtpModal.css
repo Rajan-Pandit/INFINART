@@ -1,0 +1,86 @@
+/* src/components/Auth/OtpModal.css */
+
+.otp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.otp-modal {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 350px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease-out;
+}
+
+.otp-modal h2 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.otp-hint {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.otp-modal input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+}
+input{
+    max-width: 92%;
+}
+
+.otp-modal button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.otp-modal button:first-of-type {
+  background:#20bfa5;
+  color: white;
+}
+
+.otp-modal .close-btn {
+  background: #ccc;
+  color: black;
+}
+
+.error-msg {
+  color: red;
+  font-size: 0.85em;
+  margin-bottom: 8px;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+
+

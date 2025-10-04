@@ -1,305 +1,124 @@
-// src/components/Register/Register.js
 import React, { useState, useEffect } from "react";
-import "./Register.css";
+import { Link, useNavigate } from "react-router-dom";
+import "./Registersection.css";
+
 import { useDispatch, useSelector } from "react-redux";
-import { registerSeller, resetAuthState } from "../../Redux/authSlice";
-import { useNavigate, Link } from "react-router-dom"; // ✅ Added Link
+import { registerUser, verifyOtp } from "../../Redux/"; // updated import
 
 const Register = () => {
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    sellerName: "",
-    email: "",
-    password: "",
-    phone: "",
-    storeName: "",
-    gstNumber: "",
-    registrationNumber: "",
-    businessAddress: {
-      street: "",
-      city: "",
-      state: "",
-      country: "",
-      postalCode: ""
-    },
-    businessType: "individual",
-    bankDetails: {
-      accountNumber: "",
-      ifscCode: "",
-      accountHolderName: "",
-      upiId: "",
-      paymentCycle: "monthly"
-    },
-    governmentIdProof: "",
-    addressProof: ""
-  });
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { seller, isLoading, isSuccess, isError, message } = useSelector(
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
+
+  const { user, token, email: otpEmail, loading, error, msg } = useSelector(
     (state) => state.auth
   );
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name.includes(".")) {
-      const [parent, child] = name.split(".");
-      setFormData((prev) => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent],
-          [child]: value
-        }
-      }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const nextStep = () => {
-    if (step < 4) setStep(step + 1);
-  };
-
-  const prevStep = () => {
-    if (step > 1) setStep(step - 1);
-  };
-
-  const handleSubmit = (e) => {
+  // Step 1: Register form submit
+  const handleRegisterSubmit = (e) => {
     e.preventDefault();
-    dispatch(registerSeller(formData));
+    const userData = {
+      fullname: {
+        firstname: firstName,
+        lastname: lastName,
+      },
+      email,
+      password,
+    };
+    dispatch(registerUser(userData));
+  };
+
+  // Step 2: OTP verify submit
+  const handleOtpSubmit = (e) => {
+    e.preventDefault();
+    dispatch(verifyOtp({ email: otpEmail, otp }));
   };
 
   useEffect(() => {
-    if (isSuccess && seller) {
+    if (user && token) {
       navigate("/");
-      dispatch(resetAuthState());
     }
-  }, [isSuccess, seller, navigate, dispatch]);
-
-  useEffect(() => {
-    return () => {
-      dispatch(resetAuthState());
-    };
-  }, [dispatch]);
+  }, [user, token, navigate]);
 
   return (
-    <div className="registration-container">
-      <div className="form-card">
-        <h2>Become a Seller</h2>
-
-        {isError && <p className="error-text">{message}</p>}
-        {isSuccess && <p className="success-text">Registration Successful!</p>}
-
-        <form onSubmit={handleSubmit}>
-          {/* Step 1 - Account Info */}
-          {step === 1 && (
-            <>
+    <div className="register-background">
+      <div className="register-container">
+        {!otpEmail ? (
+          <>
+            <h2>Register</h2>
+            <form onSubmit={handleRegisterSubmit}>
+              <label>First Name</label>
               <input
-                type="text"
-                name="sellerName"
-                placeholder="Full Name"
-                value={formData.sellerName}
-                onChange={handleChange}
                 required
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                type="text"
+                placeholder="Enter your first name"
               />
+
+              <label>Last Name</label>
               <input
+                required
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                type="text"
+                placeholder="Enter your last name"
+              />
+
+              <label>Email</label>
+              <input
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 type="email"
-                name="email"
-                placeholder="Email Address"
-                value={formData.email}
-                onChange={handleChange}
-                required
+                placeholder="Enter your email"
               />
+
+              <label>Password</label>
               <input
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 type="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-                required
+                placeholder="Enter your password"
               />
-              <input
-                type="text"
-                name="phone"
-                placeholder="Phone Number"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-              />
-            </>
-          )}
 
-          {/* Step 2 - Business Details */}
-          {step === 2 && (
-            <>
-              <input
-                type="text"
-                name="storeName"
-                placeholder="Store Name"
-                value={formData.storeName}
-                onChange={handleChange}
-                required
-              />
-              <select
-                name="businessType"
-                value={formData.businessType}
-                onChange={handleChange}
-              >
-                <option value="individual">Individual</option>
-                <option value="partnership">Partnership</option>
-                <option value="private_limited">Private Limited</option>
-                <option value="other">Other</option>
-              </select>
-              <input
-                type="text"
-                name="gstNumber"
-                placeholder="GST Number (optional)"
-                value={formData.gstNumber}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="registrationNumber"
-                placeholder="Business Registration Number (optional)"
-                value={formData.registrationNumber}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="businessAddress.street"
-                placeholder="Street"
-                value={formData.businessAddress.street}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="businessAddress.city"
-                placeholder="City"
-                value={formData.businessAddress.city}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="businessAddress.state"
-                placeholder="State"
-                value={formData.businessAddress.state}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="businessAddress.country"
-                placeholder="Country"
-                value={formData.businessAddress.country}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="businessAddress.postalCode"
-                placeholder="Postal Code"
-                value={formData.businessAddress.postalCode}
-                onChange={handleChange}
-              />
-            </>
-          )}
-
-          {/* Step 3 - Banking & Payment */}
-          {step === 3 && (
-            <>
-              <input
-                type="text"
-                name="bankDetails.accountNumber"
-                placeholder="Bank Account Number"
-                value={formData.bankDetails.accountNumber}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="bankDetails.ifscCode"
-                placeholder="IFSC / SWIFT Code"
-                value={formData.bankDetails.ifscCode}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="bankDetails.accountHolderName"
-                placeholder="Account Holder Name"
-                value={formData.bankDetails.accountHolderName}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="bankDetails.upiId"
-                placeholder="UPI ID (optional)"
-                value={formData.bankDetails.upiId}
-                onChange={handleChange}
-              />
-              <select
-                name="bankDetails.paymentCycle"
-                value={formData.bankDetails.paymentCycle}
-                onChange={handleChange}
-              >
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-              </select>
-            </>
-          )}
-
-          {/* Step 4 - Verification & Compliance */}
-          {step === 4 && (
-            <>
-              <input
-                className="seller_product-input"
-                type="text"
-                name="governmentIdProof"
-                placeholder="Government ID Proof (URL)"
-                value={formData.governmentIdProof}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="addressProof"
-                placeholder="Address Proof (URL)"
-                value={formData.addressProof}
-                onChange={handleChange}
-                required
-              />
-              <p className="review-text">
-                ✅ Review all details before submitting.
-              </p>
-            </>
-          )}
-
-          {/* Navigation Buttons */}
-          <div className="form-navigation">
-            {step > 1 && (
-              <button type="button" onClick={prevStep} disabled={isLoading}>
-                Back
+              <button type="submit" disabled={loading}>
+                {loading ? "Sending OTP..." : "Register"}
               </button>
-            )}
-            {step < 4 && (
-              <button type="button" onClick={nextStep} disabled={isLoading}>
-                Next
+            </form>
+            {error && <p className="error-msg">{error}</p>}
+            <p>
+              Have an account? <Link to="/login">Login</Link>
+            </p>
+          </>
+        ) : (
+          <>
+            <h2>Verify OTP</h2>
+            <p className="otp-msg">
+              {msg || `We sent an OTP to ${otpEmail}`}
+            </p>
+            <form onSubmit={handleOtpSubmit}>
+              <label>Enter OTP</label>
+              <input
+                required
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                type="text"
+                placeholder="Enter OTP"
+              />
+              <button type="submit" disabled={loading}>
+                {loading ? "Verifying..." : "Verify OTP"}
               </button>
-            )}
-            {step === 4 && (
-              <button type="submit" disabled={isLoading}>
-                {isLoading ? "Submitting..." : "Submit"}
-              </button>
-            )}
-          </div>
-        </form>
-
-        {/* ✅ Added Login Link */}
-        <p style={{ marginTop: "15px", textAlign: "center" }}>
-          Already a seller? <Link to="/login">Login here</Link>
-        </p>
-
-        <div className="step-indicator">Step {step} of 4</div>
+            </form>
+            {error && <p className="error-msg">{error}</p>}
+          </>
+        )}
       </div>
     </div>
   );

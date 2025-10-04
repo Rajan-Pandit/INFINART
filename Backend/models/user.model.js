@@ -1,81 +1,108 @@
+// models/user.model.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Define the user schema
+// ================= User Schema =================
 const userSchema = new mongoose.Schema({
-   fullname: {
+  fullname: {
     firstname: {
-        type: String,
-        required: true,
-        minlength: 3,
+      type: String,
+      required: true,
+      minlength: 3,
     },
-    lastname:{
-        type: String,
-        minlength: 3,
+    lastname: {
+      type: String,
+      minlength: 3,
+    },
+  },
+
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    minlength: 5,
+  },
+
+  password: {
+    type: String,
+    required: true,
+    minlength: 6,
+    select: false, // don’t return password in queries by default
+  },
+
+  phone: {
+    type: String,
+    minlength: 10,
+  },
+
+  address: {
+    type: String,
+    minlength: 5,
+  },
+
+  // Multiple saved addresses
+  savedAddresses: [
+    {
+      fullName: String,
+      phone: String,
+      street: String,
+      city: String,
+      state: String,
+      pincode: String,
     }
-},
-    email :{
-        type:String,
-        required: true,
-        unique: true,
-        minlength: 5,
-    },
-    password: {
-        type: String,
-        required: true,
-        minlength: 6,
-        select: false, //when you query the user, the password will not be returned by default
-    },
-    phone: {
-        type: String,
-        minlength: 10,
-    },
-    address: {
-        type: String, 
-        minlength: 5,
-    },
-    //updating madhav code Aug for Order flow
-    
-    // doubt why full name and all the things are different : Is this because of Different Addresses
-     savedAddress: {
-        fullName: { type: String },
-        phone: { type: String },
-        street: { type: String },
-        city: { type: String },
-        state: { type: String },
-        pincode: { type: String },
-      },
+  ],
 
-       favorites: [
-      { type: mongoose.Schema.Types.ObjectId, ref: 'Product' }
-    ],
-    cart: [
-      {
-        product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-        quantity: { type: Number, default: 1, min: 1 },
-        price: { type: Number, required: true }
-      }
-    ],
-});
+  favorites: [
+    { type: mongoose.Schema.Types.ObjectId, ref: 'Product' }
+  ],
 
-//Genrate a unique token for the user
+  // ============== Cart ==============
+  cart: [
+    {
+      product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+      quantity: { type: Number, default: 1, min: 1 },
+      price: { type: Number, required: true },
+      // Link product to seller so we can split orders later
+      seller: { type: mongoose.Schema.Types.ObjectId, ref: 'Seller', required: true }
+    }
+  ],
+
+  // ============== Email verification fields ==============
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  otp: {
+    type: String,
+    select: false, // don't return otp by default
+  },
+  otpExpires: {
+    type: Date,
+  },
+}, { timestamps: true });
+
+// ================= Methods =================
+
+// Generate a unique JWT token
 userSchema.methods.generateAuthToken = async function () {
+  const token = jwt.sign(
+    { _id: this._id },
+    process.env.JWT_SECRET,
+    { expiresIn: "30d" }
+  );
+  return token;
+};
 
-    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
-    return token;
-}
-
-// Compare the password with the hashed password
+// Compare password
 userSchema.methods.comparePassword = async function (password) {
-    return await bcrypt.compare(password, this.password); 
-}
+  return await bcrypt.compare(password, this.password);
+};
 
-// Hash the password before saving the user to the database
+// Hash password
 userSchema.statics.hashPassword = async function (password) {
-    return await bcrypt.hash(password, 10); // 6 === 10 digit encr
-}   
-
+  return await bcrypt.hash(password, 10);
+};
 
 const userModel = mongoose.model('User', userSchema);
 

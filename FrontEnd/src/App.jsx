@@ -7,7 +7,7 @@ import { Toaster as SonnerToaster } from "sonner";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../src/Redux/authSlice.js";
 import authService from "../src/Redux/authService.js";
-
+import OtpModal  from "../src/components/OtpModal/OtpModal.jsx";
 import Homepage from "../pages/homepage";
 import Productpage from "../pages/productpage";
 import Loginpage from "../pages/Loginpage";
@@ -76,11 +76,9 @@ function App() {
         <Route path="/OrderList" element={<OrderList />} />
         <Route path="/order_Details" element={<OrderDetails />} />
         <Route path="/order_details" element={<OrderDetails />} />
-        <Route
-          path="/order-placed/:orderNumber"
-          element={<OrderPlaced />}
-        />
+        <Route path="/order-placed/:orderNumber" element={<OrderPlaced />} />
 
+        <Route path="/:verifyotp" element={<OtpModal />} />
         {/* Address Routes */}
         <Route path="/AddressList" element={<AddressList />} />
 
