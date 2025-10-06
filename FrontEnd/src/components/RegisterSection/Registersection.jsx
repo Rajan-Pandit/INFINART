@@ -29,7 +29,7 @@ const Register = () => {
       password,
     };
 
-    // console.log("Sending userData:", userData);
+    //console.log("Sending userData:", userData);
     dispatch(registerUser(userData));
 
     // ✅ Navigate immediately to verify OTP page

@@ -8,22 +8,20 @@ const storedUser = localStorage.getItem("user")
 const initialState = {
   user: storedUser ? storedUser.user : null,
   token: storedUser ? storedUser.token : null,
-  email: null, // to hold email waiting for OTP
+  email: null,
   msg: "",
   loading: false,
   error: null,
 };
 
-// ✅ Register user → Step 1 (request OTP)
+// ✅ Register user → With OTP (keep as is)
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (userData, thunkAPI) => {
     try {
       const response = await authService.register(userData);
-      // console.log("registerUser success:", response);
       return response;
     } catch (error) {
-      console.error("registerUser error:", error); // ✅ Debug log
       const message =
         error.response?.data?.message ||
         error.response?.data?.msg ||
@@ -33,28 +31,50 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-// ✅ Login user → Step 1 (request OTP)
+
+// ✅ Login user → Direct login WITHOUT OTP
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (userData, thunkAPI) => {
     try {
-      return await authService.login(userData);
+    
+      const response = await authService.login(userData);
+     
+
+      // ✅ Get server status and combine with user data
+      const serverBootTime = await authService.checkServerStatus();
+      const userDataWithBoot = {
+        ...response,
+        bootTime: serverBootTime,
+      };
+
+      // ✅ Store in localStorage immediately
+      localStorage.setItem("user", JSON.stringify(userDataWithBoot));
+    
+
+      return userDataWithBoot;
     } catch (error) {
+    
       const message =
         error.response?.data?.message ||
         error.response?.data?.msg ||
+        error.message ||
         "Login failed";
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-// ✅ Verify OTP → Step 2 (finalize login/register)
+// ✅ Verify OTP → Only for registration
 export const verifyOtp = createAsyncThunk(
   "auth/verifyOtp",
   async (otpData, thunkAPI) => {
     try {
-      return await authService.verifyOtp(otpData);
+      const response = await authService.verifyOtp(otpData);
+      const serverBootTime = await authService.checkServerStatus();
+      const userDataWithBoot = { ...response, bootTime: serverBootTime };
+      localStorage.setItem("user", JSON.stringify(userDataWithBoot));
+      return userDataWithBoot;
     } catch (error) {
       const message =
         error.response?.data?.message ||
@@ -83,41 +103,40 @@ const authSlice = createSlice({
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
-        // console.log("registerUser.pending"); 
       })
-      // authSlice.js
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-
-        // ✅ Extract email properly from backend response
         state.user = action.payload.user || null;
-        state.email = action.payload.user?.email || null; // <-- important
+        state.email = action.payload.user?.email || null;
         state.msg = action.payload.message || "";
       })
-
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        console.log("registerUser.rejected:", action.payload); // ✅ Debug
       })
 
-      // ✅ Login (OTP requested)
+      // ✅ Login (Direct login - NO OTP)
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
+      // In the loginUser.fulfilled case:
       .addCase(loginUser.fulfilled, (state, action) => {
+      
         state.loading = false;
-        state.email = action.payload.email;
+        state.error = null;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
         state.msg = action.payload.msg || action.payload.message;
+        state.email = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      // ✅ Verify OTP (finalize login/register)
+      // ✅ Verify OTP (Only for registration)
       .addCase(verifyOtp.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -128,7 +147,6 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.msg = action.payload.msg || action.payload.message;
         state.email = null;
-        localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(verifyOtp.rejected, (state, action) => {
         state.loading = false;

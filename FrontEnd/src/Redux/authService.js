@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = import.meta.env.VITE_API_URL; // e.g., http://localhost:5000
+const API_URL = import.meta.env.VITE_API_URL;
 
 // ✅ Check server status
 const checkServerStatus = async () => {
@@ -14,37 +14,35 @@ const checkServerStatus = async () => {
 // ✅ Register (Step 1: send OTP)
 const register = async (userData) => {
   try {
-  //  console.log("API_URL:", API_URL); 
-    // console.log("Sending to backend:", userData); 
     const res = await axios.post(`${API_URL}/users/register`, userData);
     return res.data;
   } catch (error) {
-    console.error("Registration error:", error.response?.data); // ✅ Log backend error
+    console.error("Registration error:", error.response?.data);
     throw error;
   }
 };
 
-// ✅ Verify OTP (Step 2: finalizing register/login)
+// ✅ Verify OTP (Step 2: finalizing registration)
 const verifyOtp = async (otpData) => {
   try {
     const res = await axios.post(`${API_URL}/users/verify-otp`, otpData);
-    const serverBootTime = await checkServerStatus();
-    const userDataWithBoot = { ...res.data, bootTime: serverBootTime };
-    localStorage.setItem("user", JSON.stringify(userDataWithBoot));
-    return userDataWithBoot;
+    return res.data;
   } catch (error) {
-    console.error("OTP verification error:", error.response?.data); // ✅ Log backend error
+    console.error("OTP verification error:", error.response?.data);
     throw error;
   }
 };
 
-// ✅ Login (Step 1: send OTP)
+// ✅ Login (Direct login - NO OTP)
 const login = async (userData) => {
   try {
+  
+    
     const res = await axios.post(`${API_URL}/users/login`, userData);
+    
     return res.data;
   } catch (error) {
-    console.error("Login error:", error.response?.data); // ✅ Log backend error
+    ;
     throw error;
   }
 };
