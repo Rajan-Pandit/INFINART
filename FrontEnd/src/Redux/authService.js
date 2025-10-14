@@ -33,6 +33,17 @@ const verifyOtp = async (otpData) => {
   }
 };
 
+// ✅ Resend OTP
+const resendOtp = async (data) => {
+  try {
+    const res = await axios.post(`${API_URL}/users/resend-otp`, data);
+    return res.data;
+  } catch (error) {
+    console.error("Resend OTP error:", error.response?.data);
+    throw error;
+  }
+};
+
 // ✅ Login (Direct login - NO OTP)
 const login = async (userData) => {
   try {
@@ -47,5 +58,5 @@ const login = async (userData) => {
   }
 };
 
-const authService = { register, login, verifyOtp, checkServerStatus };
+const authService = { register, login, verifyOtp, checkServerStatus, resendOtp };
 export default authService;

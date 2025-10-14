@@ -85,6 +85,21 @@ export const verifyOtp = createAsyncThunk(
   }
 );
 
+// ✅ Resend OTP thunk
+export const resendOtp = createAsyncThunk(
+  "auth/resendOtp",
+  async (data, thunkAPI) => {
+    try {
+      const response = await authService.resendOtp(data);
+      return response;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.response?.data?.msg || "Resend OTP failed";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -149,6 +164,21 @@ const authSlice = createSlice({
         state.email = null;
       })
       .addCase(verifyOtp.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    // Resend OTP states (do not affect user/token)
+    builder
+      .addCase(resendOtp.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(resendOtp.fulfilled, (state, action) => {
+        state.loading = false;
+        state.msg = action.payload.message || "OTP resent";
+      })
+      .addCase(resendOtp.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
